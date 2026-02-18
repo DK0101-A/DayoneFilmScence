@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: day-one-film-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && python run_full.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: OPENAI_BASE_URL
+        value: https://api.apiyi.com/v1
+      - key: AI_MODEL
+        value: gemini-2.0-flash
+      - key: OPENAI_API_KEY
+        generateValue: false  # 需要在Render控制台手动设置
+      - key: APIYI_API_KEY
+        generateValue: false  # 需要在Render控制台手动设置
+    autoDeploy: true
