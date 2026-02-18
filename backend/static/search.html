@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影视场景搜索 - Day One Film AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+        
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        
+        .search-box {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .search-input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-group label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .filter-group select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .year-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .year-range input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .results-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            min-height: 400px;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .results-count {
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .results-count span {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .scene-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid #667eea;
+        }
+        
+        .scene-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .scene-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
+        .scene-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .scene-meta {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .scene-score {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .scene-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .scene-timestamp {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .scene-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+        }
+        
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .ai-analysis {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #764ba2;
+        }
+        
+        .ai-analysis h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .ai-analysis-content {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .search-input-group {
+                flex-direction: column;
+            }
+            
+            .filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .scene-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Day One Film AI</h1>
+            <p>AI驱动的影视场景参考搜索工具</p>
+        </div>
+
+        <div class="search-box">
+            <div class="search-input-group">
+                <input type="text" class="search-input" id="searchInput" 
+                       placeholder="描述你想要的场景，例如：雨夜追车、办公室争吵、医院离别...">
+                <button class="search-btn" onclick="performSearch()">🔍 搜索</button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>年代范围</label>
+                    <div class="year-range">
+                        <input type="number" id="yearFrom" placeholder="2010" min="1900" max="2030">
+                        <span>-</span>
+                        <input type="number" id="yearTo" placeholder="2024" min="1900" max="2030">
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <label>地区</label>
+                    <select id="regionFilter">
+                        <option value="">全部地区</option>
+                        <option value="华语">华语</option>
+                        <option value="欧美">欧美</option>
+                        <option value="日韩">日韩</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>类型</label>
+                    <select id="genreFilter">
+                        <option value="">全部类型</option>
+                        <option value="动作">动作</option>
+                        <option value="爱情">爱情</option>
+                        <option value="悬疑">悬疑</option>
+                        <option value="喜剧">喜剧</option>
+                        <option value="科幻">科幻</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>数量</label>
+                    <select id="limitSelect">
+                        <option value="10">10个结果</option>
+                        <option value="20" selected>20个结果</option>
+                        <option value="50">50个结果</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer">
+            <div class="empty-state">
+                <div class="empty-state-icon">🎭</div>
+                <h3>开始搜索</h3>
+                <p>输入场景描述，发现精彩影视参考</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        
+        // 执行搜索
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) {
+                alert('请输入场景描述');
+                return;
+            }
+            
+            const yearFrom = document.getElementById('yearFrom').value;
+            const yearTo = document.getElementById('yearTo').value;
+            const region = document.getElementById('regionFilter').value;
+            const genre = document.getElementById('genreFilter').value;
+            const limit = document.getElementById('limitSelect').value;
+            
+            // 显示加载状态
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>AI正在分析场景并搜索参考...</p>
+                </div>
+            `;
+            
+            try {
+                // 构建URL参数
+                const params = new URLSearchParams({
+                    scene_description: query,
+                    limit: limit
+                });
+                
+                if (yearFrom) params.append('year_from', yearFrom);
+                if (yearTo) params.append('year_to', yearTo);
+                if (region) params.append('region', region);
+                if (genre) params.append('genre', genre);
+                
+                const response = await fetch(`${API_BASE}/api/search`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        limit: parseInt(limit)
+                    })
+                });
+                const data = await response.json();
+                
+                displayResults(data, query);
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">❌</div>
+                        <h3>搜索失败</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // 显示搜索结果
+        function displayResults(data, query) {
+            const container = document.getElementById('resultsContainer');
+            const results = data.results || [];
+            const aiUnderstanding = data.ai_understanding || {};
+            
+            if (results.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <h3>未找到相关结果</h3>
+                        <p>尝试调整搜索词或筛选条件</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <div class="results-header">
+                    <div class="results-count">
+                        找到 <span>${results.length}</span> 个参考场景
+                    </div>
+                </div>
+            `;
+            
+            // AI分析结果
+            if (aiUnderstanding.mood && aiUnderstanding.mood !== '待分析') {
+                html += `
+                    <div class="ai-analysis">
+                        <h3>🤖 AI场景分析</h3>
+                        <div class="ai-analysis-content">
+                            <p><strong>情绪氛围：</strong>${aiUnderstanding.mood || '未识别'}</p>
+                            <p><strong>视觉风格：</strong>${aiUnderstanding.visual_style || '未识别'}</p>
+                            ${aiUnderstanding.similar_movies && aiUnderstanding.similar_movies.length > 0 ? 
+                                `<p><strong>推荐参考：</strong>${aiUnderstanding.similar_movies.join('、')}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // 结果卡片
+            html += results.map(scene => `
+                <div class="scene-card">
+                    <div class="scene-header">
+                        <div>
+                            <div class="scene-title">${scene.title || '未知'}</div>
+                            <div class="scene-meta">
+                                ${scene.year ? scene.year + '年' : ''} 
+                                ${scene.rating ? '⭐ ' + scene.rating : ''}
+                                ${scene.source ? ' | 来源: ' + scene.source : ''}
+                            </div>
+                        </div>
+                        <div class="scene-score">匹配度 ${scene.relevance_score || 0}%</div>
+                    </div>
+                    ${scene.timestamp ? `
+                    <div class="scene-timestamp">
+                        ⏱️ <strong>${scene.timestamp}</strong> ${scene.timestamp_note ? '(' + scene.timestamp_note + ')' : ''}
+                    </div>
+                    ` : ''}
+                    <div class="scene-description">
+                        ${scene.explanation || scene.scene_match || '暂无描述'}
+                    </div>
+                    <div class="scene-actions">
+                        <button class="btn-secondary" onclick="addToFavorites('${scene.title}', '${scene.year}', '${scene.timestamp || ''}')">
+                            ⭐ 收藏
+                        </button>
+                        ${scene.url ? `<button class="btn-secondary" onclick="window.open('${scene.url}', '_blank')">🔗 查看详情</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            container.innerHTML = html;
+        }
+        
+        // 添加到收藏（简化版）
+        function addToFavorites(title, year, timestamp) {
+            let message = `已收藏: ${title} (${year})`;
+            if (timestamp) {
+                message += `\n⏱️ 时间戳: ${timestamp}`;
+            }
+            message += '\n\n（需要登录后才能实际保存）';
+            alert(message);
+        }
+        
+        // 回车搜索
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>
