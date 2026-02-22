@@ -181,6 +181,14 @@ def _register_providers():
     except ImportError as e:
         print(f"API易提供商未注册: {e}")
 
+    # 注册通义千问提供商
+    try:
+        from app.services.qwen_provider import QwenProvider
+
+        AIProviderFactory.register("qwen", QwenProvider)
+    except ImportError as e:
+        print(f"通义千问提供商未注册: {e}")
+
     # 未来注册其他提供商
     # try:
     #     from app.services.doubao_provider import DoubaoProvider

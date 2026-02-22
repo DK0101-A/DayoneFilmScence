@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试搜索</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        input { padding: 10px; width: 300px; font-size: 16px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        .result { margin-top: 20px; }
+        .item { border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Day One Film AI - 测试版</h1>
+    <input type="text" id="query" placeholder="输入搜索词" value="速度与激情">
+    <button onclick="doSearch()">搜索</button>
+    
+    <div id="results" class="result"></div>
+    
+    <script>
+        async function doSearch() {
+            const q = document.getElementById('query').value;
+            const div = document.getElementById('results');
+            div.innerHTML = '搜索中...';
+            
+            try {
+                const res = await fetch(window.location.origin + '/api/search', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({query: q, limit: 5})
+                });
+                const data = await res.json();
+                
+                if (data.results && data.results.length > 0) {
+                    div.innerHTML = '<h3>找到 ' + data.results.length + ' 条结果</h3>';
+                    data.results.forEach(r => {
+                        div.innerHTML += '<div class="item">[' + r.source + '] ' + r.title + ' - 匹配度:' + r.relevance_score + '%</div>';
+                    });
+                } else {
+                    div.innerHTML = '没有结果';
+                }
+            } catch(e) {
+                div.innerHTML = '错误: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

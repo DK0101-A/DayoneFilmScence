@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>API调试</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #fff; }
+        .result { margin: 10px 0; padding: 10px; background: #2a2a2a; border-radius: 8px; }
+        .tmdb { border-left: 4px solid #01b4e4; }
+        .douban { border-left: 4px solid #2e8b57; }
+        .uuuka { border-left: 4px solid #ff6b35; }
+        .youtube { border-left: 4px solid #ff0000; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>API 调试页面</h1>
+    <button onclick="testSearch()">测试搜索</button>
+    <div id="output"></div>
+    
+    <script>
+        async function testSearch() {
+            var output = document.getElementById('output');
+            output.innerHTML = '请求中...';
+            
+            try {
+                var response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({query: '速度与激情', limit: 10})
+                });
+                
+                var data = await response.json();
+                
+                var html = '<h3>总数: ' + data.total_found + '</h3>';
+                html += '<h3>返回: ' + data.results.length + ' 条</h3>';
+                
+                var srcCount = {};
+                data.results.forEach(r => {
+                    srcCount[r.source] = (srcCount[r.source] || 0) + 1;
+                });
+                html += '<h3>来源统计: ' + JSON.stringify(srcCount) + '</h3><hr>';
+                
+                data.results.forEach(r => {
+                    html += '<div class="result ' + r.source + '">';
+                    html += '<strong>[' + r.source + ']</strong> ' + r.title;
+                    html += '</div>';
+                });
+                
+                output.innerHTML = html;
+            } catch(e) {
+                output.innerHTML = '错误: ' + e.message;
+            }
+        }
+    </script>
+</body>
+</html>

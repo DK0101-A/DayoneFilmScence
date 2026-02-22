@@ -1,18 +1,54 @@
 # Soul Memory
 
-Last updated: 2026-02-18T00:00:00Z
+Last updated: 2026-02-22
 
-## Goals
-- 
+## 项目版本: v1.0.0 ✅ 已发布
 
-## Preferences
-- 
+## 项目进度
 
-## Current focus
-- 
+### ✅ 已完成
+- **后端 API**: FastAPI 运行在端口 8000
+- **搜索 API**: POST /api/search 功能正常
+- **多数据源搜索**: 
+  - 豆瓣 (中国影视)
+  - TMDB (全球日韩美剧)
+  - YouTube (全球视频)
+  - Uuuka (短剧资源)
+  - 腾讯云VOD (需上传视频)
+- **用户系统**: 注册、登录，JWT 认证
+- **收藏功能**: 收藏/取消收藏场景
+- **时间戳功能**: 标注场景时间点
+- **平台跳转**: 爱优腾抖音B站一键跳转
+- **后台管理**: 用户管理、API管理
+- **前端页面**: 搜索页、测试页
 
-## Loose ends
-- 
+### 🔄 进行中
+- 腾讯云VOD需要先上传视频才能搜索
+- B站 API 申请中
+- 抖音 API 申请中
 
-## Recurring chores / automations to consider
-- 
+### 📋 待处理
+- 部署到服务器
+- 域名解析
+- B站 API 申请
+- 抖音 API 申请
+
+## 数据源规则
+
+1. **豆瓣** - 中国影视（正常）
+2. **TMDB** - 全球日韩美剧（正常）
+3. **YouTube** - 全球视频（正常）
+4. **Uuuka** - 短剧资源（正常）
+5. **腾讯云VOD** - 需上传视频
+6. **B站** - 等API申请
+
+## 测试地址
+
+- 测试版: http://192.168.31.201:8000/static/test.html
+- 搜索版: http://192.168.31.201:8000/static/search.html
+- 后台: http://192.168.31.201:8000/admin
+
+## 管理员账号
+
+- 邮箱: admin@dayonefilm.ai
+- 密码: admin123

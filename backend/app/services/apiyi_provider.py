@@ -177,29 +177,46 @@ class APIYiProvider(AISceneProvider):
         try:
             content = await self._call_api(messages, temperature=0.7)
 
-            # 解析JSON
+            # 解析JSON - 改进版，处理各种格式
             try:
-                # 清理可能的markdown
+                # 尝试直接解析
+                return json.loads(content)
+            except:
+                pass
+
+            try:
+                # 清理markdown
                 content = content.strip()
                 if content.startswith("```json"):
                     content = content[7:]
-                if content.startswith("```"):
+                elif content.startswith("```"):
                     content = content[3:]
                 if content.endswith("```"):
                     content = content[:-3]
                 content = content.strip()
-
                 return json.loads(content)
             except:
-                # 解析失败返回简化结构
-                return {
-                    "scene_elements": [query],
-                    "mood": "待分析",
-                    "visual_style": "待分析",
-                    "similar_movies": [],
-                    "keywords": {"zh": [query], "en": [query]},
-                    "raw_response": content[:200],
-                }
+                pass
+
+            try:
+                # 尝试从文本中提取JSON
+                import re
+
+                json_match = re.search(r"\{[\s\S]*\}", content)
+                if json_match:
+                    return json.loads(json_match.group())
+            except:
+                pass
+
+            # 解析失败返回简化结构
+            return {
+                "scene_elements": [query],
+                "mood": "待分析",
+                "visual_style": "待分析",
+                "similar_movies": [],
+                "keywords": {"zh": [query], "en": [query]},
+                "raw_response": content[:200],
+            }
         except Exception as e:
             print(f"场景理解失败: {e}")
             return {

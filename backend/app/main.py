@@ -63,6 +63,8 @@ app.include_router(admin_router)
 
 # 静态文件服务（管理后台前端）
 app.mount("/admin", StaticFiles(directory="static/admin", html=True), name="admin")
+# 前端页面
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 @app.get("/")
