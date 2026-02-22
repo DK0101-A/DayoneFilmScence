@@ -36,8 +36,18 @@ try:
 
     # 静态文件服务
     from fastapi.staticfiles import StaticFiles
+    from fastapi.responses import FileResponse
 
     app.mount("/static", StaticFiles(directory="static"), name="static")
+
+    # 管理后台静态文件
+    @app.get("/admin")
+    async def admin():
+        return FileResponse("static/admin/index.html")
+
+    @app.get("/admin/{path:path}")
+    async def admin_static(path: str):
+        return FileResponse(f"static/admin/{path}")
 
     # 基础路由
     @app.get("/")
@@ -80,6 +90,14 @@ try:
         print("✅ 管理路由加载成功")
     except Exception as e:
         print(f"⚠️ 管理路由加载失败: {e}")
+
+    try:
+        from app.api.admin_api import router as admin_api_router
+
+        app.include_router(admin_api_router)
+        print("✅ API管理路由加载成功")
+    except Exception as e:
+        print(f"⚠️ API管理路由加载失败: {e}")
 
     print("=" * 50)
     print("🌐 服务地址: http://localhost:8000")
