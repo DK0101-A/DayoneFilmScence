@@ -302,7 +302,18 @@
         
         .card-info .timestamp-tag.empty:hover {
             color: var(--primary);
-            border-color: var(--primary);
+        }
+        
+        .card-info .favorite-btn {
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 8px;
+            transition: transform 0.2s;
+        }
+        
+        .card-info .favorite-btn:hover {
+            transform: scale(1.1);
         }
         
         .timestamp-note {
@@ -548,6 +559,26 @@
             border-color: var(--primary);
             color: white;
         }
+        
+        /* 平台搜索按钮 */
+        .platform-btn {
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+        
+        .platform-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -557,7 +588,7 @@
             <a href="#" class="active">首页</a>
             <a href="#">收藏</a>
             <a href="#">历史</a>
-            <a href="#">关于</a>
+            <a href="#" id="userNav" onclick="showUserModal()">登录</a>
         </nav>
     </header>
 
@@ -602,6 +633,24 @@
                     <span class="hot-keyword" onclick="searchKeyword('科幻战斗')">科幻战斗</span>
                     <span class="hot-keyword" onclick="searchKeyword('汽车追逐')">汽车追逐</span>
                     <span class="hot-keyword" onclick="searchKeyword('吻戏')">吻戏</span>
+                </div>
+                
+                <!-- 平台快速搜索按钮 -->
+                <div class="platform-search" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333;">
+                    <span style="color: var(--text-secondary); margin-right: 10px; font-size: 12px;">平台直达:</span>
+                    <button class="platform-btn" onclick="searchOnPlatform('iqiyi')" title="爱奇艺">🎬 爱奇艺</button>
+                    <button class="platform-btn" onclick="searchOnPlatform('youku')" title="优酷">📺 优酷</button>
+                    <button class="platform-btn" onclick="searchOnPlatform('tencent')" title="腾讯视频">🦊 腾讯</button>
+                    <button class="platform-btn" onclick="searchOnPlatform('mgtv')" title="芒果TV">🥭 芒果</button>
+                    <button class="platform-btn" onclick="searchOnPlatform('douyin')" title="抖音">🎵 抖音</button>
+                    <button class="platform-btn" onclick="searchOnPlatform('bilibili')" title="B站">🔗 B站</button>
+                </div>
+                
+                <!-- 已绑定平台（登录后显示） -->
+                <div id="myPlatforms" class="platform-search" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #333; display: none;">
+                    <span style="color: var(--text-secondary); margin-right: 10px; font-size: 12px;">我的平台:</span>
+                    <span id="myPlatformList"></span>
+                    <button class="platform-btn" onclick="showUserModal()" style="background: #1a5;">+ 绑定</button>
                 </div>
             </div>
         </section>
@@ -690,6 +739,84 @@
                 alert('网络错误: ' + e.message);
             }
         }
+        
+        // 添加收藏
+        async function addFavorite(title, source, url) {
+            // 检查是否登录
+            var token = localStorage.getItem('token');
+            if (!token) {
+                alert('请先登录后再收藏');
+                showLoginModal();
+                return;
+            }
+            
+            try {
+                var response = await fetch(window.location.origin + '/api/favorites', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        title: decodeURIComponent(title),
+                        source: source,
+                        url: decodeURIComponent(url)
+                    })
+                });
+                
+                var data = await response.json();
+                if (data.success || response.ok) {
+                    alert('✅ 收藏成功！');
+                } else {
+                    alert('收藏失败: ' + (data.message || '未知错误'));
+                }
+            } catch(e) {
+                alert('网络错误: ' + e.message);
+            }
+        }
+        
+        // 显示登录弹窗
+        function showLoginModal() {
+            var email = prompt('请输入邮箱:');
+            if (!email) return;
+            var password = prompt('请输入密码:');
+            if (!password) return;
+            
+            login(email, password);
+        }
+        
+        // 登录
+        async function login(email, password) {
+            try {
+                var response = await fetch(window.location.origin + '/api/auth/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email, password})
+                });
+                
+                var data = await response.json();
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    alert('✅ 登录成功！');
+                    updateUserUI();
+                } else {
+                    alert('登录失败: ' + (data.message || '未知错误'));
+                }
+            } catch(e) {
+                alert('登录错误: ' + e.message);
+            }
+        }
+        
+        // 更新用户UI
+        function updateUserUI() {
+            var user = localStorage.getItem('user');
+            if (user) {
+                var userData = JSON.parse(user);
+                document.getElementById('userNav').textContent = userData.username || '用户';
+            }
+        }
+        
         // 调试：确认脚本加载
         console.log('🎬 search.html 脚本已加载');
         
@@ -802,6 +929,8 @@
                     } else {
                         html += '<span class="timestamp-tag empty" onclick="event.stopPropagation();showAddTimestamp(\'' + encodeURIComponent(title) + '\',\'' + source + '\',\'' + encodeURIComponent(url) + '\')">+ 添加时间戳</span>';
                     }
+                    // 收藏按钮
+                    html += '<span class="favorite-btn" onclick="event.stopPropagation();addFavorite(\'' + encodeURIComponent(title) + '\',\'' + source + '\',\'' + encodeURIComponent(url) + '\')">❤️ 收藏</span>';
                     html += '</div>';
                     if (timestampNote) {
                         html += '<div class="timestamp-note">' + timestampNote + '</div>';
@@ -820,6 +949,46 @@
         function searchKeyword(keyword) {
             document.getElementById('searchInput').value = keyword;
             performSearch();
+        }
+        
+        // 平台快速搜索 - 跳转到对应平台
+        function searchOnPlatform(platform) {
+            var keyword = document.getElementById('searchInput').value.trim();
+            if (!keyword) {
+                alert('请先输入搜索关键词');
+                return;
+            }
+            
+            // URL编码关键词
+            var encodedKeyword = encodeURIComponent(keyword);
+            var url = '';
+            
+            switch(platform) {
+                case 'iqiyi':
+                    url = 'https://so.iqiyi.com/so/q_' + encodedKeyword;
+                    break;
+                case 'youku':
+                    url = 'https://list.youku.com/showresult?searchword=' + encodedKeyword;
+                    break;
+                case 'tencent':
+                    url = 'https://v.qq.com/x/search/?q=' + encodedKeyword;
+                    break;
+                case 'mgtv':
+                    url = 'https://www.mgtv.com/index/search.html?kw=' + encodedKeyword;
+                    break;
+                case 'douyin':
+                    url = 'https://www.douyin.com/search/' + encodedKeyword;
+                    break;
+                case 'bilibili':
+                    url = 'https://search.bilibili.com/all?keyword=' + encodedKeyword;
+                    break;
+                default:
+                    alert('未知平台');
+                    return;
+            }
+            
+            // 新窗口打开
+            window.open(url, '_blank');
         }
         
         // 获取来源显示名称

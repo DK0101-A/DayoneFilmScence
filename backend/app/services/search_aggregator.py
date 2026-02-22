@@ -488,6 +488,7 @@ class SearchAggregator:
         use_bilibili: bool = True,
         use_youtube: bool = True,
         use_uuuka: bool = True,
+        use_tencent_vod: bool = True,
         use_mock: bool = False,
         douban_api_key: str = None,
         tmdb_api_key: str = None,
@@ -500,6 +501,15 @@ class SearchAggregator:
         self.bilibili = BilibiliService() if use_bilibili else None
         self.youtube = YouTubeService(youtube_api_key) if use_youtube else None
         self.uuuka = UuukaService() if use_uuuka else None
+        # 腾讯云VOD
+        try:
+            from app.services.tencent_vod_service import tencent_vod_service
+
+            self.tencent_vod = tencent_vod_service if use_tencent_vod else None
+        except ImportError:
+            self.tencent_vod = None
+            print("⚠️ 腾讯云VOD服务未加载")
+
         self.mock = use_mock
         self.douban_api_key = douban_api_key
         self.content_type = content_type
@@ -518,9 +528,13 @@ class SearchAggregator:
         if self.tmdb:
             tasks.append(self.tmdb.search(keywords_zh, limit, self.region))
 
-        # Uuuka 短剧搜索（新增）
+        # Uuuka 短剧搜索
         if self.uuuka:
             tasks.append(self.uuuka.search(keywords_zh, limit))
+
+        # 腾讯云VOD搜索
+        if self.tencent_vod:
+            tasks.append(self.tencent_vod.search(keywords_zh, limit))
 
         # B站需要单独处理（避免并发触发反爬）- 目前禁用，等API申请
         bilibili_task = None
@@ -530,16 +544,25 @@ class SearchAggregator:
         if self.youtube and keywords_en:
             tasks.append(self.youtube.search(keywords_en, limit))
 
-        # 先执行其他任务
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        # 先执行其他任务（添加超时保护）
+        try:
+            results = await asyncio.wait_for(
+                asyncio.gather(*tasks, return_exceptions=True),
+                timeout=25.0,  # 总超时25秒
+            )
+        except asyncio.TimeoutError:
+            print("⚠️ 搜索超时，部分结果可能丢失")
+            results = []
 
-        # Debug
+        # Debug - 记录每个任务的结果
         print(f"Tasks returned: {len(results)}")
         for i, r in enumerate(results):
             if isinstance(r, list):
                 print(f"  Task {i}: {len(r)} results")
+            elif isinstance(r, Exception):
+                print(f"  Task {i}: ERROR - {type(r).__name__}: {str(r)[:50]}")
             else:
-                print(f"  Task {i}: ERROR - {r}")
+                print(f"  Task {i}: Unknown type - {type(r)}")
 
         # 等待后执行 B站（避免并发）- 目前禁用
         bilibili_results = []
@@ -550,11 +573,14 @@ class SearchAggregator:
             except Exception as e:
                 print(f"B站搜索异常: {e}")
 
-        # 合并 B站结果
+        # 合并所有结果（安全处理异常）
         all_results = []
         for r in results:
             if isinstance(r, list):
                 all_results.extend(r)
+            elif isinstance(r, Exception):
+                # 记录错误但继续处理其他结果
+                print(f"  ⚠️ 任务异常: {type(r).__name__}")
 
         print(f"合并后总数: {len(all_results)}")
 

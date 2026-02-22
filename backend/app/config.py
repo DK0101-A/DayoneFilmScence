@@ -55,10 +55,10 @@ class Settings(BaseSettings):
     OPENAI_BASE_URL: str = "https://api.apiyi.com/v1"
     OPENAI_API_KEY: str = ""
     APIYI_API_KEY: str = ""  # 兼容旧代码
-    AI_MODEL: str = "gemini-2.0-flash"
-    FLASH_MODEL: str = "gemini-2.0-flash"
+    AI_MODEL: str = "gemini-2.5-flash-image"  # 默认使用 Gemini 2.5
+    FLASH_MODEL: str = "gemini-2.5-flash-image"
     CLAUDE_MODEL: str = "claude-3-5-sonnet-20241022"
-    DEFAULT_MODEL: str = "gemini-2.0-flash"
+    DEFAULT_MODEL: str = "gemini-2.5-flash-image"
 
     # ============================================
     # 数据源配置
@@ -66,6 +66,9 @@ class Settings(BaseSettings):
 
     DOUBAN_API_KEY: Optional[str] = None
     TMDB_API_KEY: Optional[str] = None
+
+    # YouTube Data API v3 (免费配额：每天100次搜索)
+    YOUTUBE_API_KEY: Optional[str] = None
 
     # ============================================
     # 功能开关

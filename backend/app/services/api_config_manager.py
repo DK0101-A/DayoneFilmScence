@@ -55,6 +55,23 @@ class APIConfigManager:
             "last_tested": None,
             "status": "unknown",
         },
+        {
+            "id": "default_3",
+            "name": "dbzy",
+            "display_name": "豆瓣资源站",
+            "api_key": "dbzy",
+            "base_url": "https://caiji.dbzy5.com/api.php/provide/vod",
+            "search_endpoint": "/",
+            "params": {"ac": "detail", "h": "24"},
+            "mapping": {"items": "list", "title": "vod_name", "url": "vod_play_url"},
+            "type": "general",
+            "enabled": True,
+            "description": "苹果CMS影视资源站",
+            "is_default": True,
+            "created_at": "2026-02-22",
+            "last_tested": None,
+            "status": "unknown",
+        },
     ]
 
     def __init__(self):
