@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>影视场景搜索 - Day One Film AI</title>
+    <title>Day One Film AI - 影视场景搜索</title>
+    <!-- v2.0 时间戳功能 + 多来源显示 -->
     <style>
+        :root {
+            --primary: #e50914;
+            --primary-dark: #b20710;
+            --bg-dark: #141414;
+            --bg-card: #1f1f1f;
+            --bg-hover: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --gradient: linear-gradient(135deg, #e50914 0%, #ff6b6b 100%);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,132 +25,153 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 20px;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
+        /* Header */
         .header {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+            padding: 20px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .nav a:hover, .nav a.active {
+            color: var(--text-primary);
+        }
+        
+        /* Main Content */
+        .main {
+            padding-top: 120px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 40px;
+            padding-right: 40px;
+            padding-bottom: 40px;
+        }
+        
+        /* Hero Search */
+        .hero {
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            padding: 20px;
+            margin-bottom: 40px;
         }
         
-        .header h1 {
-            font-size: 36px;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            font-weight: 700;
         }
         
-        .header p {
+        .hero p {
+            color: var(--text-secondary);
             font-size: 18px;
-            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        /* Search Box */
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 40px;
         }
         
         .search-box {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            margin-bottom: 30px;
+            display: flex;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            border: 1px solid #333;
         }
         
-        .search-input-group {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+        .search-box:focus-within {
+            border-color: var(--primary);
         }
         
         .search-input {
             flex: 1;
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            padding: 18px 25px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 18px;
+            outline: none;
         }
         
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
+        .search-input::placeholder {
+            color: var(--text-secondary);
         }
         
         .search-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 15px 40px;
-            border-radius: 10px;
+            padding: 18px 40px;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: background 0.3s;
         }
         
         .search-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            background: var(--primary-dark);
         }
         
+        /* Filters */
         .filters {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
             gap: 15px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
         }
         
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        
-        .filter-group label {
+        .filter-select {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid #333;
+            padding: 10px 20px;
+            border-radius: 6px;
             font-size: 14px;
-            color: #666;
-            font-weight: 500;
-        }
-        
-        .filter-group select {
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            background: white;
             cursor: pointer;
-        }
-        
-        .filter-group select:focus {
             outline: none;
-            border-color: #667eea;
         }
         
-        .year-range {
-            display: flex;
-            gap: 10px;
-            align-items: center;
+        .filter-select:focus {
+            border-color: var(--primary);
         }
         
-        .year-range input {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        
-        .results-container {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            min-height: 400px;
+        /* Results Grid */
+        .results-section {
+            margin-top: 30px;
         }
         
         .results-header {
@@ -147,385 +180,694 @@
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 1px solid #333;
         }
         
         .results-count {
-            font-size: 18px;
-            color: #333;
+            font-size: 20px;
+            font-weight: bold;
         }
         
         .results-count span {
-            color: #667eea;
-            font-weight: bold;
+            color: var(--primary);
         }
         
+        /* Grid Layout */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            padding: 20px 0;
+        }
+        
+        /* Scene Card */
         .scene-card {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border-left: 4px solid #667eea;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            margin-bottom: 8px;
         }
         
         .scene-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.2);
         }
         
-        .scene-header {
+        .card-image {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: #111;
+            overflow: hidden;
+        }
+        
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .scene-card:hover .card-image img {
+            transform: scale(1.05);
+        }
+        
+        .card-image .no-image {
             display: flex;
-            justify-content: space-between;
-            align-items: start;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 48px;
+            color: #333;
+        }
+        
+        /* Timestamp Badge */
+        .timestamp-badge {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        /* Card Content */
+        .card-content {
+            padding: 15px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .card-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .card-info .source-tag {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .card-info .source-tmdb { background: #01b4e4; color: white; }
+        .card-info .source-douban { background: #2e8b57; color: white; }
+        .card-info .source-uuuka { background: #ff6b35; color: white; }
+        .card-info .source-youtube { background: #ff0000; color: white; }
+        .card-info .source-bilibili { background: #00a1d6; color: white; }
+        
+        .card-info .timestamp-tag {
+            color: #ffc107;
+        }
+        
+        .card-info .timestamp-tag.empty {
+            color: #888;
+            cursor: pointer;
+            border: 1px dashed #555;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .card-info .timestamp-tag.empty:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .timestamp-note {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        /* 时间戳弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal-box {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .modal-box h3 {
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+        
+        .modal-box input, .modal-box textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            background: var(--bg-dark);
+            border: 1px solid #333;
+            color: white;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .modal-box textarea {
+            height: 60px;
+            resize: none;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-cancel {
+            background: #333;
+            color: #888;
+        }
+        
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .card-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Match Score */
+        .match-score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        /* AI Analysis */
+        .ai-analysis {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .ai-analysis h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .ai-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             margin-bottom: 15px;
         }
         
-        .scene-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
+        .ai-tag {
+            background: rgba(229, 9, 20, 0.2);
+            color: #ff6b6b;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        .ai-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .ai-info-item {
+            font-size: 14px;
+        }
+        
+        .ai-info-item strong {
+            color: var(--text-secondary);
+            display: block;
             margin-bottom: 5px;
         }
         
-        .scene-meta {
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .scene-score {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        
-        .scene-description {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-        
-        .scene-timestamp {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 12px;
-            display: inline-block;
-            font-weight: 500;
-        }
-        
-        .scene-actions {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-            padding: 8px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-        
-        .btn-secondary:hover {
-            background: #667eea;
-            color: white;
-        }
-        
+        /* Loading */
         .loading {
             text-align: center;
             padding: 60px;
-            color: #999;
         }
         
         .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
             width: 50px;
             height: 50px;
+            border: 4px solid #333;
+            border-top-color: var(--primary);
+            border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
         
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
         
+        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 60px;
-            color: #999;
+            padding: 80px 20px;
+            color: var(--text-secondary);
         }
         
-        .empty-state-icon {
+        .empty-icon {
             font-size: 64px;
             margin-bottom: 20px;
         }
         
-        .ai-analysis {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid #764ba2;
-        }
-        
-        .ai-analysis h3 {
-            color: #764ba2;
+        .empty-state h3 {
+            font-size: 24px;
             margin-bottom: 10px;
-            font-size: 16px;
+            color: var(--text-primary);
         }
         
-        .ai-analysis-content {
-            color: #555;
-            line-height: 1.6;
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            .search-input-group {
+            .header {
+                padding: 15px 20px;
+            }
+            
+            .main {
+                padding-left: 20px;
+                padding-right: 20px;
+                padding-top: 100px;
+            }
+            
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .search-box {
                 flex-direction: column;
+            }
+            
+            .search-btn {
+                width: 100%;
             }
             
             .filters {
-                grid-template-columns: 1fr;
+                flex-direction: column;
             }
             
-            .scene-header {
-                flex-direction: column;
-                gap: 10px;
+            .results-grid {
+                grid-template-columns: 1fr;
             }
+        }
+        
+        /* Hot Keywords */
+        .hot-keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .hot-keyword {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #333;
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .hot-keyword:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🎬 Day One Film AI</h1>
-            <p>AI驱动的影视场景参考搜索工具</p>
-        </div>
+    <header class="header">
+        <div class="logo">Day One Film AI</div>
+        <nav class="nav">
+            <a href="#" class="active">首页</a>
+            <a href="#">收藏</a>
+            <a href="#">历史</a>
+            <a href="#">关于</a>
+        </nav>
+    </header>
 
-        <div class="search-box">
-            <div class="search-input-group">
-                <input type="text" class="search-input" id="searchInput" 
-                       placeholder="描述你想要的场景，例如：雨夜追车、办公室争吵、医院离别...">
-                <button class="search-btn" onclick="performSearch()">🔍 搜索</button>
-            </div>
+    <main class="main">
+        <section class="hero">
+            <h1>发现完美影视参考</h1>
+            <p>用自然语言描述你想要的场景，AI帮你找到最相似的影视片段</p>
             
-            <div class="filters">
-                <div class="filter-group">
-                    <label>年代范围</label>
-                    <div class="year-range">
-                        <input type="number" id="yearFrom" placeholder="2010" min="1900" max="2030">
-                        <span>-</span>
-                        <input type="number" id="yearTo" placeholder="2024" min="1900" max="2030">
-                    </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="描述场景，如：雨夜飙车、浪漫表白、科幻战斗...">
+                    <button class="search-btn" id="searchBtn" onclick="performSearch()">搜索</button>
                 </div>
                 
-                <div class="filter-group">
-                    <label>地区</label>
-                    <select id="regionFilter">
+                <div class="filters">
+                    <select class="filter-select" id="regionFilter">
                         <option value="">全部地区</option>
                         <option value="华语">华语</option>
                         <option value="欧美">欧美</option>
-                        <option value="日韩">日韩</option>
-                        <option value="其他">其他</option>
+                        <option value="韩剧">韩剧</option>
+                        <option value="日剧">日剧</option>
                     </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label>类型</label>
-                    <select id="genreFilter">
+                    <select class="filter-select" id="contentType">
                         <option value="">全部类型</option>
-                        <option value="动作">动作</option>
-                        <option value="爱情">爱情</option>
-                        <option value="悬疑">悬疑</option>
-                        <option value="喜剧">喜剧</option>
-                        <option value="科幻">科幻</option>
+                        <option value="post">短剧</option>
+                        <option value="dongman">动漫</option>
+                        <option value="movie">电影</option>
+                        <option value="tv">电视剧</option>
                     </select>
-                </div>
-                
-                <div class="filter-group">
-                    <label>数量</label>
-                    <select id="limitSelect">
+                    <select class="filter-select" id="limitSelect">
                         <option value="10">10个结果</option>
                         <option value="20" selected>20个结果</option>
                         <option value="50">50个结果</option>
                     </select>
                 </div>
+                
+                <div class="hot-keywords">
+                    <span style="color: var(--text-secondary); margin-right: 10px;">热门:</span>
+                    <span class="hot-keyword" onclick="searchKeyword('雨夜飙车')">雨夜飙车</span>
+                    <span class="hot-keyword" onclick="searchKeyword('浪漫表白')">浪漫表白</span>
+                    <span class="hot-keyword" onclick="searchKeyword('科幻战斗')">科幻战斗</span>
+                    <span class="hot-keyword" onclick="searchKeyword('汽车追逐')">汽车追逐</span>
+                    <span class="hot-keyword" onclick="searchKeyword('吻戏')">吻戏</span>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div class="results-container" id="resultsContainer">
+        <section class="results-section" id="resultsSection">
             <div class="empty-state">
-                <div class="empty-state-icon">🎭</div>
+                <div class="empty-icon">🎬</div>
                 <h3>开始搜索</h3>
                 <p>输入场景描述，发现精彩影视参考</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 时间戳标注弹窗 -->
+    <div class="modal-overlay" id="timestampModal">
+        <div class="modal-box">
+            <h3>📍 添加场景时间戳</h3>
+            <p id="modalTitle" style="color:#888;margin-bottom:12px;"></p>
+            <input type="text" id="timestampInput" placeholder="时间戳，如 45:30 或 01:23:45">
+            <textarea id="timestampDesc" placeholder="场景描述，如：雨夜追车经典场面"></textarea>
+            <div class="modal-buttons">
+                <button class="btn-cancel" onclick="closeTimestampModal()">取消</button>
+                <button class="btn-submit" onclick="submitTimestamp()">提交</button>
             </div>
         </div>
     </div>
 
     <script>
-        const API_BASE = 'http://localhost:8000';
+        // 当前标注的影视信息
+        var currentTimestampItem = null;
         
-        // 执行搜索
+        // 显示添加时间戳弹窗
+        function showAddTimestamp(title, source, url) {
+            currentTimestampItem = {
+                title: decodeURIComponent(title),
+                source: source,
+                url: decodeURIComponent(url)
+            };
+            document.getElementById('modalTitle').textContent = currentTimestampItem.title;
+            document.getElementById('timestampInput').value = '';
+            document.getElementById('timestampDesc').value = '';
+            document.getElementById('timestampModal').classList.add('show');
+        }
+        
+        // 关闭弹窗
+        function closeTimestampModal() {
+            document.getElementById('timestampModal').classList.remove('show');
+            currentTimestampItem = null;
+        }
+        
+        // 提交时间戳
+        async function submitTimestamp() {
+            if (!currentTimestampItem) return;
+            
+            var time = document.getElementById('timestampInput').value.trim();
+            var desc = document.getElementById('timestampDesc').value.trim();
+            
+            if (!time) {
+                alert('请输入时间戳');
+                return;
+            }
+            
+            try {
+                var response = await fetch(window.location.origin + '/api/timestamp', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        title: currentTimestampItem.title,
+                        source: currentTimestampItem.source,
+                        url: currentTimestampItem.url,
+                        time: time,
+                        description: desc || '用户标注场景'
+                    })
+                });
+                
+                var data = await response.json();
+                if (data.success) {
+                    alert('✅ 时间戳添加成功！感谢您的贡献');
+                    closeTimestampModal();
+                    // 重新搜索以更新显示
+                    performSearch();
+                } else {
+                    alert('添加失败: ' + data.message);
+                }
+            } catch(e) {
+                alert('网络错误: ' + e.message);
+            }
+        }
+        // 调试：确认脚本加载
+        console.log('🎬 search.html 脚本已加载');
+        
+        // 自动检测API地址（兼容本机和局域网）
+        const API_BASE = window.location.origin;
+        
+        // 搜索
         async function performSearch() {
-            const query = document.getElementById('searchInput').value.trim();
+            console.log('🔍 performSearch 被调用');
+            var query = document.getElementById('searchInput').value.trim();
+            console.log('📝 搜索词:', query);
             if (!query) {
                 alert('请输入场景描述');
                 return;
             }
             
-            const yearFrom = document.getElementById('yearFrom').value;
-            const yearTo = document.getElementById('yearTo').value;
-            const region = document.getElementById('regionFilter').value;
-            const genre = document.getElementById('genreFilter').value;
-            const limit = document.getElementById('limitSelect').value;
+            var limit = document.getElementById('limitSelect').value;
+            var contentType = document.getElementById('contentType').value;
+            var region = document.getElementById('regionFilter').value;
             
-            // 显示加载状态
-            const container = document.getElementById('resultsContainer');
-            container.innerHTML = `
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <p>AI正在分析场景并搜索参考...</p>
-                </div>
-            `;
+            var container = document.getElementById('resultsSection');
+            container.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>搜索中...</p></div>';
+            
+            var requestBody = {
+                query: query,
+                limit: parseInt(limit)
+            };
+            if (contentType) requestBody.content_type = contentType;
+            if (region) requestBody.region = region;
             
             try {
-                // 构建URL参数
-                const params = new URLSearchParams({
-                    scene_description: query,
-                    limit: limit
-                });
-                
-                if (yearFrom) params.append('year_from', yearFrom);
-                if (yearTo) params.append('year_to', yearTo);
-                if (region) params.append('region', region);
-                if (genre) params.append('genre', genre);
-                
-                const response = await fetch(`${API_BASE}/api/search`, {
+                var response = await fetch(window.location.origin + '/api/search', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        query: query,
-                        limit: parseInt(limit)
-                    })
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(requestBody)
                 });
-                const data = await response.json();
                 
-                displayResults(data, query);
-            } catch (error) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">❌</div>
-                        <h3>搜索失败</h3>
-                        <p>${error.message}</p>
-                    </div>
-                `;
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                
+                var data = await response.json();
+                var results = data.results || [];
+                
+                // 调试：显示收到的来源
+                console.log('API返回结果数:', results.length);
+                var debugSrcs = {};
+                results.forEach(r => { debugSrcs[r.source] = (debugSrcs[r.source] || 0) + 1; });
+                console.log('来源统计:', debugSrcs);
+                
+                if (results.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><h3>未找到相关结果</h3><p>尝试其他搜索词</p></div>';
+                    return;
+                }
+                
+                var html = '<div class="results-grid">';
+                for (var i = 0; i < results.length; i++) {
+                    var r = results[i];
+                    var imageUrl = r.images && r.images.large ? r.images.large : '';
+                    // 修复图片URL（添加 https: 前缀）
+                    if (imageUrl && imageUrl.startsWith('//')) {
+                        imageUrl = 'https:' + imageUrl;
+                    }
+                    var title = r.title || '未知';
+                    var source = r.source || 'unknown';
+                    var sourceName = {
+                        'tmdb': 'TMDB',
+                        'douban': '豆瓣',
+                        'uuuka': 'Uuuka',
+                        'youtube': 'YouTube',
+                        'bilibili': 'B站'
+                    }[source] || source;
+                    var score = r.relevance_score > 0 ? r.relevance_score + '%' : '推荐';
+                    var url = r.url || '';
+                    var timestamp = r.timestamp || '';
+                    var timestampNote = r.timestamp_note || '';
+                    var timestampType = r.timestamp_type || '';
+                    var year = r.year || '';
+                    var sourceName = getSourceName(source);
+                    
+                    // 获取平台图标
+                    var platformIcon = getPlatformIcon(url, source);
+                    
+                    var cardClick = url ? ' onclick="window.open(\'' + url + '\', \'_blank\')"' : '';
+                    
+                    html += '<div class="scene-card"' + cardClick + '>';
+                    html += '<div class="card-image">';
+                    if (imageUrl) {
+                        html += '<img src="' + imageUrl + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">';
+                        html += '<div class="no-image" style="display:none">🎬</div>';
+                    } else {
+                        html += '<div class="no-image">🎬</div>';
+                    }
+                    html += '<span class="match-score">' + score + '</span>';
+                    // 添加平台图标
+                    if (platformIcon) {
+                        html += '<span class="platform-icon">' + platformIcon + '</span>';
+                    }
+                    html += '</div>';
+                    html += '<div class="card-content">';
+                    html += '<div class="card-title">' + title + '</div>';
+                    html += '<div class="card-info">';
+                    html += '<span class="source-tag source-' + source + '">' + sourceName + '</span>';
+                    if (year) {
+                        html += '<span>' + year + '</span>';
+                    }
+                    if (timestamp) {
+                        var tsIcon = timestampType === 'user' ? '👤' : (timestampType === 'ai' ? '🤖' : '⏱');
+                        html += '<span class="timestamp-tag">' + tsIcon + ' ' + timestamp + '</span>';
+                    } else {
+                        html += '<span class="timestamp-tag empty" onclick="event.stopPropagation();showAddTimestamp(\'' + encodeURIComponent(title) + '\',\'' + source + '\',\'' + encodeURIComponent(url) + '\')">+ 添加时间戳</span>';
+                    }
+                    html += '</div>';
+                    if (timestampNote) {
+                        html += '<div class="timestamp-note">' + timestampNote + '</div>';
+                    }
+                    html += '</div>';
+                    html += '</div>';
+                }
+                html += '</div>';
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">❌</div><h3>网络错误</h3><p>' + e.message + '</p></div>';
             }
         }
         
-        // 显示搜索结果
-        function displayResults(data, query) {
-            const container = document.getElementById('resultsContainer');
-            const results = data.results || [];
-            const aiUnderstanding = data.ai_understanding || {};
-            
-            if (results.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">🔍</div>
-                        <h3>未找到相关结果</h3>
-                        <p>尝试调整搜索词或筛选条件</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = `
-                <div class="results-header">
-                    <div class="results-count">
-                        找到 <span>${results.length}</span> 个参考场景
-                    </div>
-                </div>
-            `;
-            
-            // AI分析结果
-            if (aiUnderstanding.mood && aiUnderstanding.mood !== '待分析') {
-                html += `
-                    <div class="ai-analysis">
-                        <h3>🤖 AI场景分析</h3>
-                        <div class="ai-analysis-content">
-                            <p><strong>情绪氛围：</strong>${aiUnderstanding.mood || '未识别'}</p>
-                            <p><strong>视觉风格：</strong>${aiUnderstanding.visual_style || '未识别'}</p>
-                            ${aiUnderstanding.similar_movies && aiUnderstanding.similar_movies.length > 0 ? 
-                                `<p><strong>推荐参考：</strong>${aiUnderstanding.similar_movies.join('、')}</p>` : ''}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // 结果卡片
-            html += results.map(scene => `
-                <div class="scene-card">
-                    <div class="scene-header">
-                        <div>
-                            <div class="scene-title">${scene.title || '未知'}</div>
-                            <div class="scene-meta">
-                                ${scene.year ? scene.year + '年' : ''} 
-                                ${scene.rating ? '⭐ ' + scene.rating : ''}
-                                ${scene.source ? ' | 来源: ' + scene.source : ''}
-                            </div>
-                        </div>
-                        <div class="scene-score">匹配度 ${scene.relevance_score || 0}%</div>
-                    </div>
-                    ${scene.timestamp ? `
-                    <div class="scene-timestamp">
-                        ⏱️ <strong>${scene.timestamp}</strong> ${scene.timestamp_note ? '(' + scene.timestamp_note + ')' : ''}
-                    </div>
-                    ` : ''}
-                    <div class="scene-description">
-                        ${scene.explanation || scene.scene_match || '暂无描述'}
-                    </div>
-                    <div class="scene-actions">
-                        <button class="btn-secondary" onclick="addToFavorites('${scene.title}', '${scene.year}', '${scene.timestamp || ''}')">
-                            ⭐ 收藏
-                        </button>
-                        ${scene.url ? `<button class="btn-secondary" onclick="window.open('${scene.url}', '_blank')">🔗 查看详情</button>` : ''}
-                    </div>
-                </div>
-            `).join('');
-            
-            container.innerHTML = html;
+        // 关键词搜索
+        function searchKeyword(keyword) {
+            document.getElementById('searchInput').value = keyword;
+            performSearch();
         }
         
-        // 添加到收藏（简化版）
-        function addToFavorites(title, year, timestamp) {
-            let message = `已收藏: ${title} (${year})`;
-            if (timestamp) {
-                message += `\n⏱️ 时间戳: ${timestamp}`;
-            }
-            message += '\n\n（需要登录后才能实际保存）';
-            alert(message);
+        // 获取来源显示名称
+        function getSourceName(source) {
+            var names = {
+                'douban': '豆瓣',
+                'tmdb': 'TMDB',
+                'youtube': 'YouTube',
+                'uuuka': '短剧',
+                'bilibili': 'B站',
+                'jkyapi': '短剧'
+            };
+            return names[source] || source;
         }
         
-        // 回车搜索
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
+        // 获取平台图标
+        function getPlatformIcon(url, source) {
+            if (!url) return '';
+            var lowerUrl = url.toLowerCase();
+            
+            // 根据URL判断平台
+            if (lowerUrl.includes('iqiyi')) return '🎬';
+            if (lowerUrl.includes('youku')) return '📺';
+            if (lowerUrl.includes('tencent')) return '🦊';
+            if (lowerUrl.includes('mgtv')) return '🥭';
+            if (lowerUrl.includes('douyin')) return '🎵';
+            if (lowerUrl.includes('bilibili')) return '🔗';
+            if (lowerUrl.includes('youtube')) return '▶️';
+            if (lowerUrl.includes('quark')) return '💾';
+            
+            // 根据来源判断
+            if (source === 'douban') return '🎯';
+            if (source === 'tmdb') return '🌐';
+            if (source === 'youtube') return '▶️';
+            if (source === 'uuuka' || source === 'jkyapi') return '🎭';
+            
+            return '';
+        }
+        
+        // DOM加载完成后绑定回车事件
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
+            });
+            console.log('✅ search.html 初始化完成');
         });
+        
+
     </script>
 </body>
 </html>
