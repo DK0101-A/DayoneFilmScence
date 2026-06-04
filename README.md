@@ -70,6 +70,8 @@ If you're interested in picking this up, feel free to fork. Ideas to explore:
 - Build a film shot dataset
 - Implement frame-level scene matching
 
+**Contact:** xdnsun@gmail.com
+
 ---
 
 ## 🚀 Quick Start
