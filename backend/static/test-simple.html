@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>简单测试</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #111; color: #fff; }
+        button { padding: 12px 24px; font-size: 16px; cursor: pointer; background: #e50914; color: white; border: none; border-radius: 6px; }
+        .result { margin: 15px 0; padding: 12px; background: #222; border-radius: 8px; }
+        .douban { border-left: 4px solid #2e8b57; }
+        .tmdb { border-left: 4px solid #01b4e4; }
+        .uuuka { border-left: 4px solid #ff6b35; }
+        .youtube { border-left: 4px solid #ff0000; }
+    </style>
+</head>
+<body>
+    <h1>搜索测试</h1>
+    <button onclick="doSearch()">搜索"速度与激情"</button>
+    <div id="output"></div>
+    
+    <script>
+    async function doSearch() {
+        const out = document.getElementById('output');
+        out.innerHTML = '请求中...';
+        
+        const res = await fetch('/api/search', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({query: '速度与激情', limit: 8})
+        });
+        
+        const data = await res.json();
+        
+        let html = `<h3>总数: ${data.total_found} | 返回: ${data.results.length} 条</h3>`;
+        
+        // 统计来源
+        const srcCount = {};
+        data.results.forEach(r => {
+            srcCount[r.source] = (srcCount[r.source] || 0) + 1;
+        });
+        html += `<p>来源: ${JSON.stringify(srcCount)}</p><hr>`;
+        
+        data.results.forEach(r => {
+            html += `<div class="result ${r.source}">
+                <b>[${r.source}]</b> ${r.title}
+            </div>`;
+        });
+        
+        out.innerHTML = html;
+    }
+    </script>
+</body>
+</html>

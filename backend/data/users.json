@@ -1,0 +1,45 @@
+{
+  "users": {
+    "user_c8672008": {
+      "id": "user_c8672008",
+      "username": "admin",
+      "email": "admin@dayonefilm.ai",
+      "password_hash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+      "is_admin": true,
+      "is_active": true,
+      "created_at": "2026-02-18T19:53:59.941974",
+      "last_login": "2026-02-22T04:07:44.970509",
+      "profile": {
+        "avatar": null,
+        "phone": null,
+        "company": null,
+        "title": null
+      },
+      "subscription": {
+        "tier": "free",
+        "expires_at": null
+      }
+    },
+    "user_2032c097": {
+      "id": "user_2032c097",
+      "username": "测试导演",
+      "email": "director@test.com",
+      "password_hash": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+      "is_admin": false,
+      "is_active": true,
+      "created_at": "2026-02-18T20:05:12.313440",
+      "last_login": "2026-02-18T20:05:36.992606",
+      "profile": {
+        "avatar": null,
+        "phone": null,
+        "company": null,
+        "title": null
+      },
+      "subscription": {
+        "tier": "free",
+        "expires_at": null
+      }
+    }
+  },
+  "sessions": {}
+}

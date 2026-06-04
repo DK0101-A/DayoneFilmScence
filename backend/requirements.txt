@@ -1,0 +1,38 @@
+# Day One Film AI - Backend Dependencies
+# 影视场景参考搜索工具后端依赖
+
+# Web Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# AI Models
+# AI Studio / Gemini (开发期使用)
+google-generativeai==0.3.2
+
+# 国产大模型（生产环境迁移时使用）
+# dashscope>=1.13.0  # 通义千问（阿里云）
+# zhipuai>=2.0.0     # 智谱AI（ChatGLM）
+
+# HTTP Client
+httpx==0.25.2
+
+# Configuration
+python-dotenv==1.0.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+pydantic-settings==2.1.0
+
+# Data Processing
+python-multipart==0.0.6
+
+# Caching (Optional - for production)
+# redis==5.0.1
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Code Quality
+black==23.11.0
+flake8==6.1.0

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "workspace": {
+    "name": "v",
+    "createdAt": 1771333968751,
+    "preset": "starter"
+  },
+  "authorizedRoots": [
+    "/Users/seven/Desktop/v"
+  ]
+}
