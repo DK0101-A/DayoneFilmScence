@@ -1,28 +1,90 @@
-# 🎬 Day One Film AI
+# 🎬 Day One Film AI — 影视场景搜索
 
-AI驱动的影视场景参考搜索工具 - 帮助导演快速找到相似场景的影视参考
+> **一个小实验 · A small experiment**  
+> 用 AI 搜影视场景，发现 API 世界的开放与封闭。
 
-## ✨ 功能特性
+---
 
-- 🔍 **智能场景搜索**: 输入场景描述，AI自动分析并推荐相似影视作品
-- ⏱️ **精确时间戳**: 提供场景出现的具体时间（如 00:32:15）
-- 🎯 **AI匹配度评分**: 每部影片都有匹配度百分比和匹配理由
-- 🎨 **现代UI界面**: 响应式设计，支持移动端
-- 🤖 **扣子Agent集成**: 可在豆包APP中直接使用
+## 🇨🇳 中文
 
-## 🚀 快速开始
+### 这是什么？
 
-### 1. 本地运行
+一个用 AI 搜索影视场景的小工具。输入"雨夜追车"，它试图告诉你哪些电影里有类似画面。
+
+**这只是个试验品。** 代码粗糙，功能简陋，但确实能跑。
+
+### 一点心得
+
+做这个小项目的过程中，最大的感触是：
+
+**中国大陆的"大厂"们，API 接口和资源根本不共享，封闭得要命。** 想调个数据比登天还难。
+
+反而是国外的 YouTube、TMDB 这些平台，**更加开放和包容**。文档清晰，API 免费额度大方，开发者体验好太多。
+
+这挺讽刺的——号称开放的互联网，实际上最开放的却是那些被"墙"在外的服务。
+
+### 技术局限
+
+这个项目**做不到精确到秒的时间戳定位**，因为拿不到向量数据库级别的影视数据。要实现那种精度，需要大规模的影视素材库 + 向量化索引，这不是一个小项目能搞定的。
+
+### 未来
+
+如果感兴趣的小伙伴想接着开发，欢迎 fork。可以尝试的方向：
+- 接入真正的向量数据库（Milvus / Pinecone）
+- 构建影视镜头数据集
+- 细化到帧级别的场景匹配
+
+---
+
+## 🇬🇧 English
+
+### What is this?
+
+A small tool that uses AI to search for film scenes. Type "rainy night car chase" and it tries to find which movies have similar visuals.
+
+**This is just an experiment.** The code is rough, the features are basic, but it works.
+
+### A Reflection
+
+The biggest takeaway from building this project:
+
+**Big tech companies in mainland China keep their APIs and resources locked down tight.** Getting access to data feels like pulling teeth.
+
+Meanwhile, platforms like **YouTube and TMDB are far more open and inclusive** — clear documentation, generous free tiers, and a developer experience that actually respects your time.
+
+It's ironic. The so-called "open internet" is most open on the side that's blocked at the firewall.
+
+### Technical Limitations
+
+This project **cannot pinpoint scenes down to the exact second**, because we don't have access to vector-database-grade film data. True scene-level precision would require:
+- Large-scale film footage libraries
+- Vectorized indexing infrastructure
+- Frame-level analysis pipelines
+
+That's beyond what a small experiment can achieve.
+
+### Future
+
+If you're interested in picking this up, feel free to fork. Ideas to explore:
+- Integrate real vector databases (Milvus / Pinecone)
+- Build a film shot dataset
+- Implement frame-level scene matching
+
+---
+
+## 🚀 Quick Start
 
 ```bash
 cd backend
 pip install -r requirements.txt
-python run_full.py
+cp .env.example .env
+# Edit .env with your API keys
+python run_simple.py
 ```
 
-访问 http://localhost:8000/static/search.html
+Then open `http://localhost:8000/static/search.html`
 
-### 2. API测试
+### API 测试 / API Test
 
 ```bash
 curl -X POST http://localhost:8000/api/search \
@@ -30,65 +92,51 @@ curl -X POST http://localhost:8000/api/search \
   -d '{"query": "雨夜追车", "limit": 5}'
 ```
 
-## 🛠️ 技术栈
+---
 
-- **后端**: FastAPI + Python 3.10+
-- **AI模型**: Gemini 2.0 Flash (via API易)
-- **数据源**: 豆瓣API + 模拟数据
-- **前端**: 纯HTML/CSS/JS
+## 🛠️ Tech Stack
 
-## 📁 项目结构
+| Layer | Technology |
+|-------|-----------|
+| Backend | FastAPI + Python 3.10+ |
+| AI | Gemini 2.0 Flash (via APIYi) |
+| Data Sources | Douban API + mock data |
+| Frontend | Vanilla HTML/CSS/JS |
+
+---
+
+## 📁 Project Structure
 
 ```
 .
-├── backend/               # FastAPI后端
-│   ├── app/              # 应用代码
-│   │   ├── api/          # API路由
-│   │   ├── services/     # 业务逻辑
-│   │   └── main.py       # 应用入口
-│   ├── static/           # 静态文件
-│   └── requirements.txt  # 依赖
-├── docs/                 # 文档
-└── PROJECT-OVERVIEW.md   # 项目总览
+├── backend/               # FastAPI backend
+│   ├── app/              # Application code
+│   │   ├── api/          # API routes
+│   │   ├── services/     # Business logic (AI providers, search aggregation)
+│   │   └── main.py       # Entry point
+│   ├── static/           # Static frontend files
+│   └── requirements.txt
+├── docs/                 # Documentation
+└── PROJECT-OVERVIEW.md   # Detailed project overview
 ```
 
-## 🔑 环境变量
+---
 
-创建 `backend/.env` 文件：
+## 📝 API Endpoints
 
-```bash
-OPENAI_BASE_URL=https://api.apiyi.com/v1
-OPENAI_API_KEY=your_api_key
-AI_MODEL=gemini-2.0-flash
-```
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/search` | Search film scenes by description |
+| GET | `/api/favorites` | Get user favorites |
+| GET | `/health` | Health check |
+| GET | `/docs` | Swagger API documentation |
 
-获取 API Key: https://api.apiyi.com
+---
 
-## 🤖 扣子集成
+## 📄 License
 
-查看详细配置指南: `docs/COZE-SETUP-GUIDE.md`
+MIT
 
-## 📝 API文档
+---
 
-启动服务后访问: http://localhost:8000/docs
-
-### 主要端点
-
-- `POST /api/search` - 搜索影视场景
-- `GET /api/favorites/favorites` - 获取收藏列表
-- `GET /health` - 健康检查
-
-## 🌟 示例
-
-**搜索**: 雨夜追车
-
-**返回结果**:
-```json
-{
-  "title": "银翼杀手2049",
-  "year": "2017",
-  "rating": 8.3,
-  "relevance_score": 95,
-  "timestamp": "01:12:00",
-  "timestamp_note": "K追逐Sapper Morton的雨夜片段",
-  "explanation": "洛...
+*Made with curiosity. Built with frustration. Shared with hope.*
