@@ -36,3 +36,14 @@ data/
 .claude/
 .claw/
 .omc/
+
+# OpenCode personal config
+.opencode/
+
+# Static data (users, configs)
+backend/data/
+
+# Secrets
+.env
+.env.*
+!.env.example
