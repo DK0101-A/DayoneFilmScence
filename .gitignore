@@ -1,0 +1,38 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+env/
+
+# Env
+.env
+.env.local
+
+# Logs
+*.log
+
+# Uploads
+uploads/
+data/
+
+# Media
+*.mp4
+*.jpg
+*.png
+*.zip
+
+# Claude
+.claude/
+.claw/
+.omc/
