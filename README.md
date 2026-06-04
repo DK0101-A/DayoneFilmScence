@@ -72,6 +72,9 @@ If you're interested in picking this up, feel free to fork. Ideas to explore:
 
 **Contact:** xdnsun@gmail.com
 
+> **Note:** The `.env` file with real API keys has been removed from git tracking.  
+> Your keys stay local — they'll never be committed.
+
 ---
 
 ## 🚀 Quick Start
@@ -85,6 +88,40 @@ python run_simple.py
 ```
 
 Then open `http://localhost:8000/static/search.html`
+
+### 🔑 Getting API Keys
+
+This project uses AI APIs for scene search. Here's how to get your own keys for free:
+
+#### Google Gemini API (Recommended)
+1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Sign in with your Google account
+3. Click **"Get API Key"** → **"Create API Key"**
+4. Copy the key and add it to your `.env` file:
+   ```bash
+   GEMINI_API_KEY=your_key_here
+   ```
+5. Free tier: **60 requests per minute** — plenty for development
+
+#### Alternative: APIYi (OpenAI-compatible, Chinese-friendly)
+1. Visit [apiyi.com](https://api.apiyi.com)
+2. Register an account
+3. Top up a small amount (¥1-10 is enough for testing)
+4. Get your API key and configure:
+   ```bash
+   OPENAI_BASE_URL=https://api.apiyi.com/v1
+   OPENAI_API_KEY=your_apiyi_key_here
+   AI_MODEL=gemini-2.0-flash
+   ```
+
+#### Optional: TMDB API (for movie metadata)
+1. Go to [TMDB](https://www.themoviedb.org/settings/api)
+2. Register an account
+3. Request an API key (free for non-commercial use)
+4. Add to `.env`:
+   ```bash
+   TMDB_API_KEY=your_tmdb_key_here
+   ```
 
 ### API 测试 / API Test
 
